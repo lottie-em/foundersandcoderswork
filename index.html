@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<form action="/" id="searchTerm">
+			Search:<br>
+			<input type="text" name="search" id="THIS_IS_A_SEARCH_INPUT">
+			<input type="submit" value="Submit" id="submission">
+		</form>
+	</body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script>
+		var search = "tweets";
+
+		$(document).ready(function() {
+			// var searchTerm = $("#searchTerm");
+			$('#submission').click(function() {
+				event.preventDefault();
+				searchTerm = $("#searchTerm").serialize().slice(7);
+				ajaxCall(searchTerm);
+			});
+
+			function ajaxCall(searchParamStr) {
+				var url = 'http://localhost:1337/' + searchParamStr;
+				console.log(url);
+				$.ajax({
+					type: 'GET', 
+					url: url,
+					success: function() {
+						console.log("success!")
+						// write function to render and display the data. Call as callback.
+					}	
+				});
+			}	
+		});
+
+			// function renderData(){}
+
+	
+	</script>
+</html>
+
