@@ -6,6 +6,11 @@ var http = require('http'),
 	Twitter = require('twitter'),
 	events = require('events'),
 	insta = require('instagram-node').instagram(),
+	searchObj = {
+		date: "dummy",
+		keyword: "",
+		twitterResults: []
+	}
 	tweetObj = {},
 	// key = require('./key.js');
 	key = new Twitter ({
@@ -26,20 +31,25 @@ var http = require('http'),
 
 function requestHandler(request, response){
 	var reqName = path.basename(request.url) || 'index.html';
-	if (reqName === 'cats') {
+	if (reqName !=='index.html' && reqName.length > 0) {
 		response.writeHead(200, {'Content-Type': 'text/plain'});
-		response.end("Hi");
-	} else {
+		params.q = reqName;
+		catchFish();
+		response.end('<h1>All working here</h1>');
+	} else if (reqName === 'index.html') {
 		fs.readFile(__dirname + '/' + 'index.html', function(err, data){
 			if (!err) {
 				response.writeHead(200, {'Content-Type': 'text/html'});
-				response.write(data);
-				response.end();
+				response.end(data);
 			} else {
 				response.writeHead(404, {'Content-Type': 'text/html'});
-				response.end('<h1>Error</h1>');
+				response.end('<h1>Error loading page</h1>');
 			}
-		});
+		});	
+	}
+	else {
+		response.writeHead(404, {'Content-Type': 'text/html'});
+		response.end('<h1>No file found</h1>');
 	}
 }
 
@@ -51,6 +61,7 @@ console.log('Server up and running');
 // catchfish sends get req to twitter for the param
 function catchFish(){
 	key.get(type, params, fishGutter);
+	console.log(params);
 }
 
 //fishgutter pulls the tweets from the json obj and adds to twitter object
@@ -61,9 +72,10 @@ function fishGutter(error, data, response){
 				tag: params.q,
 				mediaUrl: data.statuses[i].entities.media[0].media_url
 			}	
-			tweetArray.push(tweetObj);
+			searchObj.twitterResults.push(tweetObj);
 		}
-		pushToDb(tweetArray, "twitterUsers");
+		searchObj.keyword = params.q;
+		pushToDb(searchObj, "twitterUsers");
 	}
 
 //DB

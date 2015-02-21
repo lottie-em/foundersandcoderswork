@@ -1,5 +1,5 @@
 
-
+<script>
 $.ajax({
 	type: 'GET', 
 	url: 'http://localhost:1337/tweets',
@@ -13,3 +13,5 @@ $.ajax({
 function renderData(){
 	
 }
+
+<script>
